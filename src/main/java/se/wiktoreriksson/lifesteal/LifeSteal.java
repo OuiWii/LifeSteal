@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import se.wiktoreriksson.lifesteal.cmd.HeartCommand;
+import se.wiktoreriksson.lifesteal.cmd.StartLSHandler;
 
 import java.util.Arrays;
 
@@ -43,6 +44,8 @@ public final class LifeSteal extends JavaPlugin implements Listener {
         return heart;
     }
 
+    private StartLSHandler lsh;
+
     /**
      * The enable method of LifeSteal. Overridden from org.bukkit.plugin.java.JavaPlugin
      */
@@ -50,8 +53,13 @@ public final class LifeSteal extends JavaPlugin implements Listener {
     public void onEnable() {
         // Plugin startup logic
         plugin = this;
-        Bukkit.getPluginManager().registerEvents(this,this);
+        lsh = new StartLSHandler();
+
         Bukkit.getPluginCommand("getheart").setExecutor(new HeartCommand());
+        Bukkit.getPluginCommand("startls").setExecutor(lsh);
+        Bukkit.getPluginManager().registerEvents(lsh,this);
+        Bukkit.getPluginManager().registerEvents(this,this);
+
 
         heart = new ItemStack(Material.NETHER_STAR);
         ItemMeta im = heart.getItemMeta();
@@ -82,6 +90,7 @@ public final class LifeSteal extends JavaPlugin implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(@NotNull PlayerDeathEvent pde) {
+        if (lsh.noDmg()) return;
         Player killer = pde.getEntity().getKiller();
         if (killer != null) { //Did they die by a player?
             AttributeInstance playerh = pde.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH);
