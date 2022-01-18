@@ -9,3 +9,6 @@ commands:
   getheart:
     description: Takes a heart from you and gives you it in item form.
     usage: /getheart
+  startls:
+    description: Starts the "game" of LifeSteal. What this really does is make it so that no one can die within 30 minutes.
+    usage: /startls
