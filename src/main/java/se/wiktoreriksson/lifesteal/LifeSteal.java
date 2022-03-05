@@ -95,7 +95,7 @@ public final class LifeSteal extends JavaPlugin implements Listener {
         if (killer != null) { //Did they die by a player?
             AttributeInstance playerh = pde.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH);
             AttributeInstance killerh = killer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            if (pde.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() > 2) { // Do not execute for 1 hearted people.
+            if (playerh.getBaseValue() > 2 || killerh.getBaseValue() < 40) { // Do not execute for 1 hearted people.
                 playerh.setBaseValue(playerh.getBaseValue()-2);
                 killerh.setBaseValue(killerh.getBaseValue()+2);
             }
@@ -108,7 +108,7 @@ public final class LifeSteal extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onRightClick(@NotNull PlayerInteractEvent pie) {
         ItemStack mainHand = pie.getPlayer().getInventory().getItemInMainHand();
-        if (mainHand.isSimilar(heart)) {
+        if (mainHand.isSimilar(heart) && pie.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() < 40) {
             if (pie.getAction() == Action.RIGHT_CLICK_BLOCK || pie.getAction() == Action.RIGHT_CLICK_AIR) {
                 mainHand.setAmount(mainHand.getAmount() - 1);
                 pie.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(pie.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2);
