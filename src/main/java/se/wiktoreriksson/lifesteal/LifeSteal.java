@@ -95,7 +95,7 @@ public final class LifeSteal extends JavaPlugin implements Listener {
         if (killer != null) { //Did they die by a player?
             AttributeInstance playerh = pde.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH);
             AttributeInstance killerh = killer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            if (playerh.getBaseValue() > 2 || killerh.getBaseValue() < 40) { // Do not execute for 1 hearted people.
+            if (playerh.getBaseValue() > 2 && killerh.getBaseValue() < 40) { // Do not execute for 1 hearted people.
                 playerh.setBaseValue(playerh.getBaseValue()-2);
                 killerh.setBaseValue(killerh.getBaseValue()+2);
             }
