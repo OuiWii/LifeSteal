@@ -5,11 +5,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.wiktoreriksson.lifesteal.LifeSteal;
@@ -29,7 +29,7 @@ public class StartLSHandler implements TabExecutor, Listener {
             sender.sendMessage("You are not OP.");
         } else {
             noDmg = true;
-            Bukkit.getScheduler().runTaskLater(LifeSteal.plugin, () -> noDmg = false, 30*60*20);
+            Bukkit.getScheduler().runTaskLater(LifeSteal.plugin, () -> noDmg = false, 24*60*60*20);
         }
         return true;
     }
@@ -42,8 +42,13 @@ public class StartLSHandler implements TabExecutor, Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerHurt(EntityDamageByEntityEvent edbee) {
-        if (edbee.getEntity() instanceof Player && edbee.getDamager() instanceof Player && noDmg) {
-            edbee.setCancelled(true);
+        if (edbee.getEntity() instanceof Player && noDmg) {
+            if (edbee.getDamager() instanceof Player)
+                edbee.setCancelled(true);
+            else if (edbee.getDamager() instanceof Projectile) {
+                if (((Projectile)edbee.getDamager()).getShooter() instanceof Player)
+                    edbee.setCancelled(true);
+            }
         }
     }
 }

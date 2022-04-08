@@ -12,6 +12,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +21,7 @@ import se.wiktoreriksson.lifesteal.cmd.HeartCommand;
 import se.wiktoreriksson.lifesteal.cmd.StartLSHandler;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Main class of the LifeSteal plugin. Contains event handling and crafting setup.
@@ -30,6 +32,12 @@ public final class LifeSteal extends JavaPlugin implements Listener {
      * An org.bukkit.inventory.ItemStack describing a Nether Star with the name "§4Heart". It is the item form of a heart, representing 2 HP.
      */
     private ItemStack heart;
+
+    /**
+     * An org.bukkit.inventory.ItemStack describing a Nether Quartz with the name "§4Heart Fragment".
+     */
+    private ItemStack frag;
+
 
     /**
      * This plugin, set during #onEnable().
@@ -69,12 +77,32 @@ public final class LifeSteal extends JavaPlugin implements Listener {
                 ChatColor.RED+"Grants you an extra heart."
         ));
         heart.setItemMeta(im);
+
+        frag = new ItemStack(Material.QUARTZ);
+        im = frag.getItemMeta();
+        im.setDisplayName(ChatColor.DARK_RED+"Heart Fragment");
+        im.setLore(List.of(
+                ChatColor.RED + "The greatest victory is that which requires no battle."
+        ));
+        im.setCustomModelData(696969);
+        frag.setItemMeta(im);
+
+
+        ShapedRecipe fragCraft = new ShapedRecipe(new NamespacedKey(this,"frag"), heart);
+        fragCraft.shape("GGG",
+                        "GTG",
+                        "GGG");
+        fragCraft.setIngredient('G',Material.GOLD_BLOCK);
+        fragCraft.setIngredient('T',Material.TOTEM_OF_UNDYING);
+        Bukkit.addRecipe(fragCraft);
+
         ShapedRecipe heartCraft = new ShapedRecipe(new NamespacedKey(this,"heart"), heart);
-        heartCraft.shape("OTO", "DND", "OTO");
-        heartCraft.setIngredient('O',Material.OBSIDIAN);
-        heartCraft.setIngredient('T',Material.TOTEM_OF_UNDYING);
+        heartCraft.shape("FDF",
+                         "DED",
+                         "FDF");
+        heartCraft.setIngredient('F',new RecipeChoice.ExactChoice(frag));
         heartCraft.setIngredient('D',Material.DIAMOND_BLOCK);
-        heartCraft.setIngredient('N',Material.NETHERITE_INGOT);
+        heartCraft.setIngredient('E',Material.ELYTRA);
         Bukkit.addRecipe(heartCraft);
     }
 
