@@ -88,7 +88,7 @@ public final class LifeSteal extends JavaPlugin implements Listener {
         frag.setItemMeta(im);
 
 
-        ShapedRecipe fragCraft = new ShapedRecipe(new NamespacedKey(this,"frag"), heart);
+        ShapedRecipe fragCraft = new ShapedRecipe(new NamespacedKey(this,"frag"), frag);
         fragCraft.shape("GGG",
                         "GTG",
                         "GGG");
